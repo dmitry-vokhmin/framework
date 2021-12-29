@@ -6,7 +6,8 @@
     <title>colour_blue</title>
     <meta name="description" content="website description"/>
     <meta name="keywords" content="website keywords, website keywords"/>
-    <meta http-equiv="content-type" content="text/html; charset=windows-1252"/>
+    <meta charset="UTF-16">
+    <meta http-equiv="content-type" content="text/html"/>
     <style type="text/css">
         html {
             height: 100%;
@@ -433,6 +434,25 @@
                 <li>Safari 4</li>
             </ul>
         </div>
+        <form action="" method="post">
+            <fieldset>
+                <legend>Зарегистрируйтесь</legend>
+                <p><label class="title" for="name">Ваше имя:</label>
+                    <input type="text" name="name" id="name"><br/>
+                    <label class="title" for="email">Ваш email:</label>
+                    <input type="text" name="email" id="email"></p>
+                <p><label for="location" class="title">Ближайший центр:</label>
+                    <select name="location" id="location">
+                        <option value="ny">Москва</option>
+                        <option value="il">Санкт-Петербург</option>
+                        <option value="ca">Екатеринбург</option>
+                    </select></p>
+                <span class="title">Являетесь участником?</span>
+                <label><input type="radio" name="member" value="yes"/> Да</label>
+                <label><input type="radio" name="member" value="no"/> Нет</label></p>
+            </fieldset>
+            <div class="submit"><input type="submit" value="Регистрация"/></div>
+        </form>
     </div>
     <div id="content_footer"></div>
     <div id="footer">
