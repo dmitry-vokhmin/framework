@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}
+Список магазинов
+{% endblock %}
+{% block style %}
+	{% include "inc_style.html" %}
+{% endblock %}
+{% block menu %}
+	{% include "inc_menu.html" %}
+{% endblock %}
+{% block body %}
+    <a href="/">назад</a>
+
+    <h1>Список магазинов</h1>
+    <ul>
+
+        {% for item in objects_list %}
+        <li>
+            {{item.name}} <span>Количество продуктов: {{item.product_count()}}</span>
+        </li>
+        {% endfor %}
+    </ul>
+
+	<div>
+		<li><a href="/product-list/">Список продуктов</a></li>
+		<li><a href="/create-product/">Создать продукт</a></li>
+	</div>
+{% endblock %}
