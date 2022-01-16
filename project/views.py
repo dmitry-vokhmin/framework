@@ -1,37 +1,51 @@
 from project.root_framework import render
 from project.patterns.creational_patterns import Engine, Logger
+from project.patterns.structural_patterns import AppRoute, Debug
 
 
 site = Engine()
 logger = Logger('main')
+routes = {}
 
 
+@AppRoute(routes, '/')
 class Index:
+    @Debug('index')
     def __call__(self, request):
         return '200 OK', render('index.html', objects_list=site.shops)
 
 
+@AppRoute(routes, '/contacts/')
 class Contacts:
+    @Debug('contacts')
     def __call__(self, request):
         return '200 OK', render('contact.html', **request)
 
 
+@AppRoute(routes, '/examples/')
 class Examples:
+    @Debug('examples')
     def __call__(self, request):
         return '200 OK', render('examples.html', **request)
 
 
+@AppRoute(routes, '/another_page/')
 class AnotherPage:
+    @Debug('another_page')
     def __call__(self, request):
         return '200 OK', render('another_page.html', **request)
 
 
+@AppRoute(routes, '/page/')
 class Page:
+    @Debug('page')
     def __call__(self, request):
         return '200 OK', render('page.html', **request)
 
 
+@AppRoute(routes, '/product-list/')
 class ProductList:
+    @Debug('product-list')
     def __call__(self, request):
         logger.log('Список продуктов')
         try:
@@ -42,9 +56,11 @@ class ProductList:
             return '200 OK', 'No products have been added yet'
 
 
+@AppRoute(routes, '/create-product/')
 class CreateProduct:
     shop_id = -1
 
+    @Debug('create-product')
     def __call__(self, request):
         if request['method'] == 'POST':
             data = request['data']
@@ -72,7 +88,9 @@ class CreateProduct:
                 return '200 OK', 'No shops have been added yet'
 
 
+@AppRoute(routes, '/create-shop/')
 class CreateShop:
+    @Debug('create-shop')
     def __call__(self, request):
         if request['method'] == 'POST':
             data = request['data']
@@ -91,14 +109,18 @@ class CreateShop:
                                     shops=shops)
 
 
+@AppRoute(routes, '/shop-list/')
 class ShopList:
+    @Debug('shop-list')
     def __call__(self, request):
         logger.log('Список магазинов')
         return '200 OK', render('shops_list.html',
                                 objects_list=site.shops)
 
 
+@AppRoute(routes, '/copy-product/')
 class CopyProduct:
+    @Debug('copy-product')
     def __call__(self, request):
         request_params = request['request_params']
 

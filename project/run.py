@@ -1,6 +1,7 @@
 from wsgiref.simple_server import make_server
 from project.root_framework import Framework
-from project.urls import routes, middlewares
+from project.urls import middlewares
+from project.views import routes
 
 
 application = Framework(routes, middlewares)
