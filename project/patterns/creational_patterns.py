@@ -1,9 +1,11 @@
 from copy import deepcopy
 from quopri import decodestring
+from project.patterns.behavioral_patterns import Subject, FileWriter
 
 
 class User:
-    pass
+    def __init__(self, name):
+        self.name = name
 
 
 class Seller(User):
@@ -11,7 +13,9 @@ class Seller(User):
 
 
 class Buyer(User):
-    pass
+    def __init__(self, name):
+        self.products = []
+        super().__init__(name)
 
 
 class UserFactory:
@@ -21,8 +25,8 @@ class UserFactory:
     }
 
     @classmethod
-    def create(cls, type_):
-        return cls.types[type_]()
+    def create(cls, type_, name):
+        return cls.types[type_](name)
 
 
 class ProductPrototype:
@@ -31,12 +35,22 @@ class ProductPrototype:
         return deepcopy(self)
 
 
-class Product(ProductPrototype):
+class Product(ProductPrototype, Subject):
 
     def __init__(self, name, shop):
         self.shop = shop
         self.name = name
         self.shop.products.append(self)
+        self.buyers = []
+        super().__init__()
+
+    def __getitem__(self, item):
+        return self.buyers[item]
+
+    def add_buyer(self, buyer):
+        self.buyers.append(buyer)
+        buyer.products.append(self)
+        self.notify()
 
 
 class Laptop(Product):
@@ -79,8 +93,8 @@ class Engine:
         self.shops = []
 
     @staticmethod
-    def create_user(type_):
-        return UserFactory.create(type_)
+    def create_user(type_, name):
+        return UserFactory.create(type_, name)
 
     @staticmethod
     def create_shop(name):
@@ -101,6 +115,11 @@ class Engine:
             if product.name == name:
                 return product
 
+    def get_buyer(self, name):
+        for buyer in self.buyers:
+            if buyer.name == name:
+                return buyer
+
     @staticmethod
     def decode_value(val):
         val_b = bytes(val.replace('%', '=').replace("+", " "), 'UTF-8')
@@ -120,9 +139,10 @@ class Singleton(type):
 
 class Logger(metaclass=Singleton):
 
-    def __init__(self, name):
+    def __init__(self, name, writer=FileWriter()):
+        self.writer = writer
         self.name = name
 
-    @staticmethod
-    def log(text):
-        print(f"log: {text}")
+    def log(self, text):
+        text = f"log: {text}"
+        self.writer.write(text)

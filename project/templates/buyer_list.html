@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}
+    Список продуктов
+{% endblock %}
+{% block menu %}
+    {% include "inc_menu.html" %}
+{% endblock %}
+{% block body %}
+    <div>
+        <li>
+            <a href="/create-buyer/">Создать покупателя</a>
+        </li>
+        <li>
+            <a href="/add-buyer/">Добавить продукт покупателю</a>
+        </li>
+    </div>
+    <h1>Список покупателей</h1>
+    <div>
+
+        {% for item in objects_list %}
+            <li>
+                {{ item.name }}
+                {% for product in item.products %}
+                    {{ product.name }}
+                {% endfor %}
+            </li>
+        {% endfor %}
+    </div>
+{% endblock %}
