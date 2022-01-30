@@ -1,8 +1,8 @@
 from project.root_framework import render
-from project.patterns.creational_patterns import Engine, Logger
+from project.patterns.creational_patterns import Engine, Logger, MapperRegistry
 from project.patterns.structural_patterns import AppRoute, Debug
+from project.patterns.architectural_system_pattern_unit_of_work import UnitOfWork
 from project.patterns.behavioral_patterns import (
-    TemplateView,
     CreateView,
     ListView,
     EmailNotifier,
@@ -14,6 +14,8 @@ site = Engine()
 logger = Logger('main')
 email_notifier = EmailNotifier()
 sms_notifier = SmsNotifier()
+UnitOfWork.new_current()
+UnitOfWork.get_current().set_mapper_registry(MapperRegistry)
 
 routes = {}
 
@@ -162,8 +164,11 @@ class CopyProduct:
 
 @AppRoute(routes=routes, url='/buyer-list/')
 class BuyersListView(ListView):
-    queryset = site.buyers
     template_name = 'buyer_list.html'
+
+    def get_queryset(self):
+        buyer = MapperRegistry.get_current_mapper('buyer')
+        return buyer.all()
 
 
 @AppRoute(routes=routes, url='/create-buyer/')
@@ -174,7 +179,9 @@ class BuyerCreateView(CreateView):
         name = data['name']
         name = site.decode_value(name)
         new_obj = site.create_user('buyer', name)
+        new_obj.mark_new()
         site.buyers.append(new_obj)
+        UnitOfWork.get_current().commit()
 
 
 @AppRoute(routes=routes, url='/add-buyer/')
